@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
-import {View,SafeAreaView,Text,TextInput,Pressable,StyleSheet,} from 'react-native';
+import {View,SafeAreaView,Text,TextInput,Pressable,StyleSheet,Alert,Platform} from 'react-native';
 
 export default function App() {
   const [nombre, setNombre] = useState('');
   const [edad, setEdad] = useState('');
+  const [cargando, setCargando] = useState(false);
+
+  const mostrarMensaje = (titulo, mensaje) => {
+    if (Platform.OS === 'web') {
+      alert(`${titulo}\n\n${mensaje}`);
+    } else {
+      Alert.alert(titulo, mensaje);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
