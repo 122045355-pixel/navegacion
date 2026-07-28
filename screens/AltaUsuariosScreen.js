@@ -13,7 +13,37 @@ export default function App() {
       Alert.alert(titulo, mensaje);
     }
   };
+  const guardarUsuario= async()=>{
+    if(nombre.trim() === '' || edad.trim() === ''){
+      mostrarMensaje('Vacios','Llene nombre y edad para continuar');
+      return;
+    }
+    try{
+      setCargando(true);
+      const respuesta = await fetch('http://localhost:5000/v1/usuarios/',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({nombre: nombre, edad: edad}),
+        }
+      );
+      const datos = await respuesta.json();
+      console.log(datos);
+        mostrarMensaje('Éxito','Usuario guardado correctamente');
+        setNombre('');
+        setEdad('');
 
+    }
+    catch(error){
+      console.error('Error al guardar usuario:', error);
+      mostrarMensaje('Error','Ocurrió un error al guardar el usuario');
+    }
+    finally{
+      setCargando(false);
+    }
+  }
   return (
     <SafeAreaView style={styles.container}>
 
@@ -38,9 +68,9 @@ export default function App() {
           onChangeText={setEdad}
         />
 
-        <Pressable style={styles.boton}>
+        <Pressable style={styles.boton} onPress={guardarUsuario} disabled={cargando}>
           <Text style={styles.textoBoton}>
-            Agregar Usuario
+            {cargando ? 'Guardando...' : 'Agregar Usuario'}
           </Text>
         </Pressable>
 
